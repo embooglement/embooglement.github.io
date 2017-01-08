@@ -1,5 +1,6 @@
 #!/bin/bash
 
 PROJECTS_HOME=~/Projects
+GITHUB_IO_HOME=~/Projects/embooglement.github.io
 
-cp -r $PROJECTS_HOME/What-Should-I-Make/* ../project-ideas
+cp -r $PROJECTS_HOME/What-Should-I-Make/* $GITHUB_IO_HOME/project-ideas
