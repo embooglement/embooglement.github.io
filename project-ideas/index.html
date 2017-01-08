@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>What Should You Make?</title>
+  </head>
+  <body>
+    <div id="what-should-you-make">
+      <h1>What Should You Make?</h1>
+      <button onclick="generateThing();">I don't know, tell me</button>
+    </div>
+    <div id="you-should-make" style="display: none">
+      <h1>You Should Make</h1>
+      <p id="phrase"></p>
+      <button onclick="generateThing();">What else should I make?</button>
+    </div>
+
+    <script type="text/javascript">
+      var phrase = document.getElementById('phrase');
+      var introSection = document.getElementById('what-should-you-make');
+      var thingSection = document.getElementById('you-should-make');
+
+      function randomInt(min, max) {
+        if (max == null) {
+          max = min;
+          min = 0;
+        }
+        return Math.floor(Math.random() * (max - min) + min);
+      }
+
+      function isVowel(character) {
+        return /^[aeiou]$/.test(character)
+      }
+
+      function capitalize(string) {
+        return string[0].toUpperCase() + string.substr(1);
+      }
+
+      function randomSet(set, num_values) {
+        var available = set.slice();
+        var selected = [];
+
+        for (var i = 0; i < num_values; ++i) {
+          var index = randomInt(available.length);
+          selected.push(available.splice(index, 1)[0]);
+        }
+
+        return selected;
+      }
+
+      function randomElement(array) {
+        return array[randomInt(array.length)];
+      }
+
+      function joinWithAnd(array) {
+        if (array.length == 0) return '';
+        else if (array.length == 1) return array[0];
+
+        return array.slice(0, array.length - 1).join(', ') + ' and ' +
+            array[array.length - 1];
+      }
+
+      function pickAdjectives(num_adjectives) {
+        return randomSet(adjectives, num_adjectives);
+      }
+
+      function pickThing() {
+        var thing = randomElement(things);
+        var num_adjectives = randomInt(1, 4);
+        var generated_adjectives = pickAdjectives(num_adjectives);
+
+        var generated_phrase = generated_adjectives.join(', ') + ' ' + thing;
+
+        if (isVowel(generated_phrase[0])) {
+          return 'an ' + generated_phrase;
+        } else {
+          return 'a ' + generated_phrase;
+        }
+      }
+
+      function pickMaterial() {
+        var generated_materials = randomSet(materials, randomInt(1, 3));
+        return joinWithAnd(generated_materials);
+      }
+
+      function pickInfinitive() {
+        return randomElement(infinitives);
+      }
+
+      function pickConnective() {
+        var keys = Object.keys(connectives);
+        var connective_key = randomElement(keys);
+
+        if (connective_key == '') return '';
+        var connective_generator = connectives[connective_key];
+        return ' ' + connective_key + ' ' + connective_generator(connective_key);
+      }
+
+      function generatePhrase() {
+        var first_thing = capitalize(pickThing());
+        var connective = pickConnective();
+        return first_thing + connective + '.';
+      }
+
+      function generateThing() {
+        var generated_phrase = generatePhrase();
+
+        phrase.innerText = generated_phrase;
+
+        introSection.style.display = 'none';
+        thingSection.style.display = 'block';
+      }
+
+      var things = [
+        "adult film",
+        "barrel of whiskey",
+        "beer keg",
+        "bicycle helmet",
+        "blanket fort",
+        "bong",
+        "brothel",
+        "candle",
+        "casino",
+        "coffee mug",
+        "corset",
+        "chariot",
+        "children's toy",
+        "crack pipe",
+        "dance",
+        "desk",
+        "dining room table",
+        "flower vase",
+        "grape vineyard",
+        "guitar",
+        "house",
+        "lamp",
+        "limousine",
+        "mannequin",
+        "motorcycle",
+        "Nazi uniform",
+        "Nazi motorcycle",
+        "owl sanctuary",
+        "pepper grinder",
+        "picture frame",
+        "pillowcase",
+        "quilt",
+        "robot",
+        "raft",
+        "shelf",
+        "spaceship",
+        "speaker system",
+        "snuff film",
+        "stripper pole",
+        "teapot",
+        "telephone",
+        "toilet",
+        "water tower",
+        "wolf sanctuary",
+        "wood chipper"
+      ];
+
+      var adjectives = [
+        "aboriginal",
+        "adult",
+        "anachronistic",
+        "artisanal",
+        "big",
+        "bitter",
+        "blue",
+        "bumpy",
+        "cold",
+        "cum-soaked",
+        "dry",
+        "dull",
+        "electrically-charged",
+        "fermented",
+        "filthy",
+        "flaky",
+        "fluffy",
+        "gilded",
+        "greasy",
+        "green",
+        "hard",
+        "hot",
+        "lemon-scented",
+        "loose",
+        "magenta",
+        "magnetic",
+        "moist",
+        "old-timey",
+        "orange",
+        "red",
+        "rock-hard",
+        "rum-soaked",
+        "uneven",
+        "urine-scented",
+        "vomit-scented",
+        "sharp",
+        "small",
+        "spicy",
+        "squishy",
+        "sweet",
+        "well-choreographed",
+        "wet",
+        "xenophobic",
+        "XXX-rated",
+        "yellow"
+      ];
+
+      var connectives = {
+        "": function() {},
+        "made out of": pickMaterial,
+        "constructed from": pickMaterial,
+        "that is also": pickThing,
+        "that is secretly": pickThing,
+        "that can be used to": pickInfinitive
+      };
+
+      var materials = [
+        "animal furs",
+        "blood",
+        "bones",
+        "chalk",
+        "candy",
+        "cat food",
+        "cardboard",
+        "cedar",
+        "cloth",
+        "corn",
+        "electricity",
+        "fish hooks",
+        "glass",
+        "iron",
+        "mahogany",
+        "metal",
+        "plastic",
+        "rock",
+        "stone",
+        "sweat",
+        "tears",
+        "used bandages",
+        "used syringes",
+        "wood",
+        "whale oil",
+        "yarn"
+      ];
+
+      var infinitives = [
+        "acknowledge the Holocaust",
+        "alert the government of terrorist threats",
+        "bathe dogs",
+        "become a better dancer",
+        "choke a bitch",
+        "collect food stamps",
+        "commit arson",
+        "commit a felony",
+        "commit a misdemeanor",
+        "criticize others",
+        "dance",
+        "decorate your home",
+        "do drugs",
+        "drink heavily",
+        "enchant your coworkers",
+        "focus your energies",
+        "follow your dreams",
+        "frighten children",
+        "groom foxes",
+        "help you lose weight",
+        "help you gain weight",
+        "hunt humans",
+        "launder money",
+        "perform heart surgery",
+        "sell used cars",
+        "slickle his peeny",
+        "stalk people",
+        "start fires",
+        "store vintage baseball cards",
+        "store crack cocaine",
+        "wash clothes",
+        "whistle"
+      ];
+    </script>
+  </body>
+</html>

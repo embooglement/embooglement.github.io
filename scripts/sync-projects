@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PROJECTS_HOME=~/Projects
+
+cp -r $PROJECTS_HOME/What-Should-I-Make/* ../project-ideas
